@@ -1,0 +1,62 @@
+{% set name = "pyvinecopulib" %}
+{% set version = "0.6.5" %}
+
+package:
+  name: {{ name|lower }}
+  version: {{ version }}
+
+source:
+  url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
+  sha256: 7c5ba2864947958b7ea23eca66efc9d927ab3d97b2fa7a168656a5e69411ce2b
+  patches:
+    - patches/0001-remove_host_deps_from_run.patch
+
+build:
+  number: 0
+  skip: true  # [py<38]
+  script: {{ PYTHON }} -m pip install . --no-deps --no-build-isolation -vv
+
+requirements:
+  build:
+    - {{ compiler('cxx') }}
+    - {{ compiler('c') }}
+  host:
+    - python
+    - setuptools >=64.0.0
+    - setuptools-scm >=8.0.0
+    - pybind11 >=2.10.0
+    - wheel
+    - pip
+  run:
+    - python
+    - numpy >=1.14
+
+test:
+  imports:
+    - pyvinecopulib
+  requires:
+    - pip
+    - pytest
+  source_files:
+    - tests/test_simulate.py
+  commands:
+    - pip check
+    - pytest -v tests/test_simulate.py
+
+about:
+  home: https://vinecopulib.github.io/pyvinecopulib
+  license: MIT
+  license_family: MIT
+  license_file: LICENSE
+  summary: A python interface to vinecopulib
+  description: |
+    pyvinecopulib is the python interface to vinecopulib, a header-only C++
+    library for vine copula models based on Eigen. It provides high-performance
+    implementations of the core features of the popular VineCopula R library, in
+    particular inference algorithms for both vine copula and bivariate copula models. 
+  doc_url: https://vinecopulib.github.io/pyvinecopulib
+  dev_url: https://github.com/vinecopulib/pyvinecopulib
+
+extra:
+  recipe-maintainers:
+    - lorepirri
