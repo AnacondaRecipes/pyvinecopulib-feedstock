@@ -1,7 +1,7 @@
 From 3518f3741ef5202c894f69ca8472c644635e6277 Mon Sep 17 00:00:00 2001
 From: Lorenzo Pirritano <lpirritano@anaconda.com>
 Date: Thu, 6 Jun 2024 15:45:48 +0200
-Subject: [PATCH] remove_host_deps_from_run
+Subject: [PATCH 1/2] remove_host_deps_from_run
 
 ---
  pyproject.toml | 3 ---

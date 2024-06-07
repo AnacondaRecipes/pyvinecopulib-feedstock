@@ -1,0 +1,59 @@
+From 810ba904166c82a677ab1f37be15683ad54f7e81 Mon Sep 17 00:00:00 2001
+From: Lorenzo Pirritano <lpirritano@anaconda.com>
+Date: Fri, 7 Jun 2024 10:42:01 +0200
+Subject: [PATCH 2/2] unvendor_boost
+
+---
+ setup.py | 26 +++++++++++++++++---------
+ 1 file changed, 17 insertions(+), 9 deletions(-)
+
+diff --git a/setup.py b/setup.py
+index ce9de18..9bfdfc8 100644
+--- a/setup.py
++++ b/setup.py
+@@ -1,17 +1,25 @@
+ import os
+-import tarfile
+-from glob import glob
++import shutil
+ from pathlib import Path
+ 
+ from pybind11.setup_helpers import Pybind11Extension, build_ext
+ from setuptools import setup
+ 
+-# Extract boost if not already done.
+-if not os.path.isdir('lib/boost'):
+-  boost_archive = glob(os.path.join('lib', 'boost*.tar.gz'))[0]
+-  tar = tarfile.open(boost_archive)
+-  tar.extractall(path='lib/boost')
+-  tar.close()
++# remove lib/boost_1_84_0.tar.gz
++local_lib_boost_tarball = os.path.join("lib", "boost_1_84_0.tar.gz")
++if not os.path.exists(local_lib_boost_tarball):
++    os.remove(local_lib_boost_tarball)
++# remove folder lib/boost which is not empty
++local_lib_boost_dir = os.path.join("lib", "boost")
++if not os.path.isdir(local_lib_boost_dir):
++    shutil.rmtree(local_lib_boost_dir)
++
++library_dir = os.environ.get("LIBRARY_LIB", None)
++# On Mac and Linux LIBRARY_LIB is not defined
++if library_dir is None:
++    library_dir = os.path.join(os.environ.get("PREFIX"), 'lib')
++
++boost_library_dir = os.path.join(library_dir, 'boost')
+ 
+ setup(
+     name='pyvinecopulib',
+@@ -20,7 +28,7 @@ setup(
+     ext_modules=[
+         Pybind11Extension('pyvinecopulib', ['src/main.cpp'],
+                           include_dirs=[
+-                              'lib/boost', 'lib/eigen',
++                              boost_library_dir, 'lib/eigen',
+                               'lib/eigen/unsupported',
+                               'lib/vinecopulib/include', 'lib/wdm/include'
+                           ],
+-- 
+2.39.1
+
