@@ -10,7 +10,7 @@ source:
   sha256: 7c5ba2864947958b7ea23eca66efc9d927ab3d97b2fa7a168656a5e69411ce2b
   patches:
     - patches/0001-remove_host_deps_from_run.patch
-    - patches/0002-unvendor_boost.patch
+    - patches/0002-unvendor_boost_and_eigen.patch
 
 build:
   number: 0
@@ -33,6 +33,7 @@ requirements:
     - wheel
     - pip
     - libboost {{ boost }}
+    - eigen 3.4.0
   run:
     - python
     - numpy >=1.14
