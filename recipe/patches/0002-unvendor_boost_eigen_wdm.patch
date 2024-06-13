@@ -1,22 +1,17 @@
-From d16a4036137654e2dfe3ec8ee2221f51174b59f4 Mon Sep 17 00:00:00 2001
+From fc2c0b3a43041c2e648934979e5f2edac7ca6502 Mon Sep 17 00:00:00 2001
 From: Lorenzo Pirritano <lpirritano@anaconda.com>
-Date: Fri, 7 Jun 2024 15:10:18 +0200
-Subject: [PATCH 2/2] unvendor_boost_and_eigen
-
-Also remove:
-  - lib/boost_1_84_0.tar.gz
-  - lib/boost
-  - lib/eigen
+Date: Thu, 13 Jun 2024 19:47:13 +0200
+Subject: [PATCH 2/2] unvendor_boost_eigen_wdm
 
 ---
- setup.py | 34 ++++++++++++++++++++++++----------
- 1 file changed, 24 insertions(+), 10 deletions(-)
+ setup.py | 41 ++++++++++++++++++++++++++++++-----------
+ 1 file changed, 30 insertions(+), 11 deletions(-)
 
 diff --git a/setup.py b/setup.py
-index ce9de18..7e8aa45 100644
+index ce9de18..c6ad4e8 100644
 --- a/setup.py
 +++ b/setup.py
-@@ -1,17 +1,31 @@
+@@ -1,17 +1,36 @@
  import os
 -import tarfile
 -from glob import glob
@@ -44,6 +39,10 @@ index ce9de18..7e8aa45 100644
 +local_lib_eigen_dir = os.path.join("lib", "eigen")
 +if not os.path.isdir(local_lib_eigen_dir):
 +    shutil.rmtree(local_lib_eigen_dir)
++# remove folder lib/wdm which is not empty
++local_lib_wdm_dir = os.path.join("lib", "wdm")
++if not os.path.isdir(local_lib_wdm_dir):
++    shutil.rmtree(local_lib_wdm_dir)
 +
 +include_dir = os.environ.get("LIBRARY_INC", None)
 +# On Mac and Linux LIBRARY_INC is not defined
@@ -53,20 +52,23 @@ index ce9de18..7e8aa45 100644
 +boost_include_dir = os.path.join(include_dir, 'boost')
 +eigen_include_dir = os.path.join(include_dir, 'eigen3')
 +eigen_unsupported_include_dir = os.path.join(include_dir, 'eigen', 'unsupported')
++wdm_include_dir = os.path.join(include_dir, 'wdm')
  
  setup(
      name='pyvinecopulib',
-@@ -20,8 +34,8 @@ setup(
+@@ -20,9 +39,9 @@ setup(
      ext_modules=[
          Pybind11Extension('pyvinecopulib', ['src/main.cpp'],
                            include_dirs=[
 -                              'lib/boost', 'lib/eigen',
 -                              'lib/eigen/unsupported',
+-                              'lib/vinecopulib/include', 'lib/wdm/include'
 +                              boost_include_dir, eigen_include_dir,
 +                              eigen_unsupported_include_dir,
-                               'lib/vinecopulib/include', 'lib/wdm/include'
++                              'lib/vinecopulib/include', wdm_include_dir
                            ],
                            language='c++',
+                           cxx_std=17)
 -- 
 2.39.1
 
