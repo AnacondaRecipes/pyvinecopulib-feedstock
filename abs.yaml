@@ -3,3 +3,4 @@ upload_channels:
 
 channels:
     - https://staging.continuum.io/prefect/fs/wdm-feedstock/pr1/4673689
+    - https://staging.continuum.io/prefect/fs/vinecopulib-feedstock/pr1/91d280a

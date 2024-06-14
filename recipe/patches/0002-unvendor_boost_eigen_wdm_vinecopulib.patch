@@ -1,17 +1,24 @@
-From fc2c0b3a43041c2e648934979e5f2edac7ca6502 Mon Sep 17 00:00:00 2001
+From 4222f1a57a9a7a46811aeceaff07ef5cb7cc524f Mon Sep 17 00:00:00 2001
 From: Lorenzo Pirritano <lpirritano@anaconda.com>
-Date: Thu, 13 Jun 2024 19:47:13 +0200
-Subject: [PATCH 2/2] unvendor_boost_eigen_wdm
+Date: Fri, 14 Jun 2024 11:44:01 +0200
+Subject: [PATCH 2/2] unvendor_boost_eigen_wdm_vinecopulib
+
+Also remove:
+  - lib/boost_1_84_0.tar.gz
+  - lib/boost
+  - lib/eigen
+  - lib/wdm
+  - lib/vinecopulib
 
 ---
- setup.py | 41 ++++++++++++++++++++++++++++++-----------
- 1 file changed, 30 insertions(+), 11 deletions(-)
+ setup.py | 30 +++++++++++++++++++-----------
+ 1 file changed, 19 insertions(+), 11 deletions(-)
 
 diff --git a/setup.py b/setup.py
-index ce9de18..c6ad4e8 100644
+index ce9de18..2be23d3 100644
 --- a/setup.py
 +++ b/setup.py
-@@ -1,17 +1,36 @@
+@@ -1,17 +1,25 @@
  import os
 -import tarfile
 -from glob import glob
@@ -27,22 +34,10 @@ index ce9de18..c6ad4e8 100644
 -  tar = tarfile.open(boost_archive)
 -  tar.extractall(path='lib/boost')
 -  tar.close()
-+# remove lib/boost_1_84_0.tar.gz
-+local_lib_boost_tarball = os.path.join("lib", "boost_1_84_0.tar.gz")
-+if not os.path.exists(local_lib_boost_tarball):
-+    os.remove(local_lib_boost_tarball)
-+# remove folder lib/boost which is not empty
-+local_lib_boost_dir = os.path.join("lib", "boost")
-+if not os.path.isdir(local_lib_boost_dir):
-+    shutil.rmtree(local_lib_boost_dir)
-+# remove folder lib/eigen which is not empty
-+local_lib_eigen_dir = os.path.join("lib", "eigen")
-+if not os.path.isdir(local_lib_eigen_dir):
-+    shutil.rmtree(local_lib_eigen_dir)
-+# remove folder lib/wdm which is not empty
-+local_lib_wdm_dir = os.path.join("lib", "wdm")
-+if not os.path.isdir(local_lib_wdm_dir):
-+    shutil.rmtree(local_lib_wdm_dir)
++# remove folder lib/ with vendored deps
++# (eigen, boost_1_84_0.tar.gz, wdm, vinecopulib)
++if not os.path.isdir("lib"):
++    shutil.rmtree("lib")
 +
 +include_dir = os.environ.get("LIBRARY_INC", None)
 +# On Mac and Linux LIBRARY_INC is not defined
@@ -53,10 +48,11 @@ index ce9de18..c6ad4e8 100644
 +eigen_include_dir = os.path.join(include_dir, 'eigen3')
 +eigen_unsupported_include_dir = os.path.join(include_dir, 'eigen', 'unsupported')
 +wdm_include_dir = os.path.join(include_dir, 'wdm')
++vinecopulib_include_dir = os.path.join(include_dir, 'vinecopulib')
  
  setup(
      name='pyvinecopulib',
-@@ -20,9 +39,9 @@ setup(
+@@ -20,9 +28,9 @@ setup(
      ext_modules=[
          Pybind11Extension('pyvinecopulib', ['src/main.cpp'],
                            include_dirs=[
@@ -65,7 +61,7 @@ index ce9de18..c6ad4e8 100644
 -                              'lib/vinecopulib/include', 'lib/wdm/include'
 +                              boost_include_dir, eigen_include_dir,
 +                              eigen_unsupported_include_dir,
-+                              'lib/vinecopulib/include', wdm_include_dir
++                              vinecopulib_include_dir, wdm_include_dir
                            ],
                            language='c++',
                            cxx_std=17)
