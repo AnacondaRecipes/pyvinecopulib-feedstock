@@ -2,4 +2,4 @@ upload_channels:
   - sfe1ed40
 
 channels:
-    - https://staging.continuum.io/prefect/fs/vinecopulib-feedstock/pr1/bada33a
+    - https://staging.continuum.io/prefect/fs/vinecopulib-feedstock/pr1/44e8c65
