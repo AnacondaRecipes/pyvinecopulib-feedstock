@@ -22,6 +22,7 @@ requirements:
     - cmake
     - make
     - eigen
+    - py-boost
     - patch # [osx]
   host:
     - python
