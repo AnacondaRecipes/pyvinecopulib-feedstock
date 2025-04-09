@@ -20,15 +20,15 @@ requirements:
   build:
     - {{ compiler('cxx') }}
     - cmake
-    - make
+    - make  # [not win]
     - eigen
     - py-boost
     - patch # [osx]
   host:
+    - pip
     - python
     - scikit-build-core >=0.4.3
     - nanobind >=2.5.0
-    - pip
   run:
     - python
     - numpy >=1.14
