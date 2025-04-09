@@ -1,0 +1,39 @@
+From b97eced57b518f3a8de750e41f08ab294d8f017b Mon Sep 17 00:00:00 2001
+From: Andrii Osipov <aosipov@anaconda.com>
+Date: Wed, 9 Apr 2025 07:26:36 -0700
+Subject: [PATCH] fix osx linker for nanobind -U symbols in
+ darwin-ld-cpython.sym
+
+---
+ CMakeLists.txt | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 2162897..686011d 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -32,6 +32,10 @@ if (NOT SKBUILD)
+   after editing C++ files.")
+ endif()
+ 
++if(APPLE)
++  set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -undefined dynamic_lookup")
++endif()
++
+ include(lib/vinecopulib/cmake/options.cmake               REQUIRED)
+ 
+ include(lib/vinecopulib/cmake/compilerDefOpt.cmake        REQUIRED)
+@@ -95,6 +99,10 @@ nanobind_add_module(
+ 
+ target_compile_definitions(pyvinecopulib_ext PRIVATE VERSION_INFO=\"${PROJECT_VERSION}\")
+ 
++if(APPLE)
++  target_link_options(pyvinecopulib_ext PRIVATE -undefined dynamic_lookup)
++endif()
++
+ # Install directive for scikit-build-core
+ install(TARGETS pyvinecopulib_ext
+     LIBRARY DESTINATION pyvinecopulib
+-- 
+2.39.3 (Apple Git-146)
+

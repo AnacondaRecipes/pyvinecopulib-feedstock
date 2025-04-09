@@ -1,5 +1,5 @@
 {% set name = "pyvinecopulib" %}
-{% set version = "0.6.5" %}
+{% set version = "0.7.1" %}
 
 package:
   name: {{ name|lower }}
@@ -7,50 +7,45 @@ package:
 
 source:
   url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
-  sha256: 7c5ba2864947958b7ea23eca66efc9d927ab3d97b2fa7a168656a5e69411ce2b
-  patches:
-    - patches/0001-remove_host_deps_from_run.patch
-    - patches/0002-unvendor_boost_eigen_wdm_vinecopulib.patch
+  sha256: be1ecca5a95e9eddc332938954f56706b4390d50a15ae22e020828665a0dc7a7
+  patches:  # [osx]
+    - patches/0001-fix-osx-linker-for-nanobind-U-symbols-in-darwin-ld-c.patch  # [osx]
 
 build:
   number: 0
-  skip: true  # [py<38]
   script: {{ PYTHON }} -m pip install . --no-deps --no-build-isolation -vv
-  missing_dso_whitelist:
-    - '$RPATH/ld64.so.1'  # [s390x]
+  skip: True  # [py<38]
 
 requirements:
   build:
     - {{ compiler('cxx') }}
-    - {{ compiler('c') }}
-    - patch       # [not win]
-    - m2-patch    # [win]
+    - cmake
+    - make
+    - eigen
+    - patch # [osx]
   host:
     - python
-    - setuptools >=64.0.0
-    - setuptools-scm >=8.0.0
-    - pybind11 >=2.10.0
-    - wheel
+    - scikit-build-core >=0.4.3
+    - nanobind >=2.5.0
     - pip
-    - libboost {{ boost }}
-    - eigen 3.4.0
-    - wdm 0.2.4
-    - vinecopulib 0.6.3
   run:
     - python
     - numpy >=1.14
+    - matplotlib >=3.0
+    - networkx >=3.0
+    - pydot >=3.0
 
 test:
+  source_files:
+    - tests
   imports:
     - pyvinecopulib
   requires:
     - pip
     - pytest
-  source_files:
-    - tests/test_simulate.py
   commands:
     - pip check
-    - pytest -v tests/test_simulate.py
+    - pytest -v tests
 
 about:
   home: https://vinecopulib.github.io/pyvinecopulib
