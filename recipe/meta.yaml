@@ -8,8 +8,6 @@ package:
 source:
   url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
   sha256: be1ecca5a95e9eddc332938954f56706b4390d50a15ae22e020828665a0dc7a7
-  patches:  # [osx]
-    - patches/0001-fix-osx-linker-for-nanobind-U-symbols-in-darwin-ld-c.patch  # [osx]
 
 build:
   number: 0
