@@ -23,7 +23,6 @@ requirements:
     - make  # [not win]
     - eigen
     - py-boost
-    - patch # [osx]
   host:
     - pip
     - python
