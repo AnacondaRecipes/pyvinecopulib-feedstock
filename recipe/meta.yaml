@@ -23,8 +23,6 @@ requirements:
     - {{ compiler('cxx') }}
     - cmake
     - make  # [not win]
-    - eigen
-    - boost-cpp {{ boost }}
     - patch  # [not win]
     - m2-patch  # [win]
   host:
