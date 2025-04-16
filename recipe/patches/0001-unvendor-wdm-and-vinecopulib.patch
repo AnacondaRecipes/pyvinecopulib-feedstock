@@ -1,0 +1,77 @@
+From 824e582998c9ad1a244f926422a4f18d4a969c9c Mon Sep 17 00:00:00 2001
+From: Andrii Osipov <aosipov@anaconda.com>
+Date: Wed, 16 Apr 2025 13:24:32 -0700
+Subject: [PATCH] unvendor wdm and vinecopulib
+
+---
+ CMakeLists.txt | 47 ++++++++++++++++++-----------------------------
+ 1 file changed, 18 insertions(+), 29 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 2162897..5225f8d 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -32,42 +32,31 @@ if (NOT SKBUILD)
+   after editing C++ files.")
+ endif()
+ 
+-include(lib/vinecopulib/cmake/options.cmake               REQUIRED)
+-
+-include(lib/vinecopulib/cmake/compilerDefOpt.cmake        REQUIRED)
+-
+-# wdm_INCLUDE_DIRS is lib/wdm/include
+-set(vinecopulib_INCLUDE_DIRS ${CMAKE_SOURCE_DIR}/lib/vinecopulib/include)
+-set(wdm_INCLUDE_DIRS ${CMAKE_SOURCE_DIR}/lib/wdm/include)
+-set(pyvinecopulib_INCLUDE_DIRS ${CMAKE_SOURCE_DIR}/src/include)
+-
+-# BUILD_TESTING is turned off
+ set(BUILD_TESTING OFF)
+ 
+-# Look for Eigen3 and Boost
+-if(DEFINED ENV{EIGEN3_INCLUDE_DIR})
+-  set(EIGEN3_INCLUDE_DIR $ENV{EIGEN3_INCLUDE_DIR})
+-endif()
++find_package(Eigen3 3.4.0 REQUIRED)
++find_package(Boost 1.82 REQUIRED)
++find_package(wdm 0.2.6 REQUIRED)
++find_package(vinecopulib 0.7.1 REQUIRED)
+ 
+-if(DEFINED ENV{Boost_INCLUDE_DIR})
+-  set(Boost_INCLUDE_DIRS $ENV{Boost_INCLUDE_DIR})
+-endif()
++set(PYVINECOPULIB_INCLUDE_DIRS ${CMAKE_SOURCE_DIR}/src/include)
+ 
+-include(lib/vinecopulib/cmake/findDependencies.cmake      REQUIRED)
++include_directories(
++  ${EIGEN3_INCLUDE_DIR}
++  ${Boost_INCLUDE_DIRS}
++  ${PYVINECOPULIB_INCLUDE_DIRS}
++)
+ 
+-# Try to import all Python components potentially needed by nanobind
+-find_package(Python 3.8
++message(STATUS "Eigen3: ${EIGEN3_INCLUDE_DIR}")
++message(STATUS "Boost: ${Boost_INCLUDE_DIRS}")
++
++find_package(
++  Python 3.8
+   REQUIRED COMPONENTS Interpreter Development.Module
+-  OPTIONAL_COMPONENTS Development.SABIModule)
++  OPTIONAL_COMPONENTS Development.SABIModule
++)
+ message(STATUS "Python_EXECUTABLE= ${Python_EXECUTABLE}")
+-
+-# Import nanobind through CMake's find_package mechanism
+-find_package(nanobind CONFIG REQUIRED)
+-
+-include(lib/vinecopulib/cmake/printInfo.cmake             REQUIRED)
+-
+-include_directories(SYSTEM ${external_includes})
+-include_directories(${vinecopulib_INCLUDE_DIRS} ${pyvinecopulib_INCLUDE_DIRS})
++find_package(nanobind 2.5.0 CONFIG REQUIRED)
+ 
+ nanobind_add_module(
+   pyvinecopulib_ext
+-- 
+2.39.3 (Apple Git-146)
+

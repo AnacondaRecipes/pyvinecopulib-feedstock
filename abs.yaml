@@ -3,3 +3,5 @@ upload_channels:
 
 channels:
   - https://staging.continuum.io/prefect/fs/nanobind-feedstock/pr3/2ed3a74
+  - https://staging.continuum.io/prefect/fs/vinecopulib-feedstock/pr2/8d0a5a2
+  - https://staging.continuum.io/prefect/fs/wdm-feedstock/pr2/971c2d5
