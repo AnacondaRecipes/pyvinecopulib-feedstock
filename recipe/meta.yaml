@@ -15,8 +15,6 @@ build:
   number: 0
   script:
     - set CMAKE_GENERATOR=Ninja  # [win]
-    # LINK : fatal error LNK1104: cannot open file 'libboost_random-vc142-mt-x64-1_82.lib'
-    - copy %LIBRARY_LIB%\boost_random.lib %LIBRARY_LIB%\libboost_random-vc142-mt-x64-1_82.lib  # [win]
     - {{ PYTHON }} -m pip install . --no-deps --no-build-isolation -vv
   skip: True  # [py<38]
 
