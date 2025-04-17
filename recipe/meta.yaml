@@ -14,7 +14,7 @@ source:
 build:
   number: 0
   script:
-    - set CMAKE_GENERATOR=Ninja  # [win]
+    - set CMAKE_GENERATOR=Ninja
     - {{ PYTHON }} -m pip install . --no-deps --no-build-isolation -vv
   skip: True  # [py<38]
 
@@ -22,7 +22,7 @@ requirements:
   build:
     - {{ compiler('cxx') }}
     - cmake
-    - make  # [not win]
+    - ninja
     - patch  # [not win]
     - m2-patch  # [win]
   host:
@@ -31,9 +31,7 @@ requirements:
     - wheel
     - scikit-build-core >=0.4.3
     - nanobind >=2.5.0
-    - boost-cpp {{ boost }}
     - eigen 3.4.0
-    - wdm 0.2.6
     - vinecopulib {{ version }}
   run:
     - python
