@@ -14,7 +14,8 @@ source:
 build:
   number: 0
   script:
-    - set CMAKE_GENERATOR=Ninja
+    - set CMAKE_GENERATOR=Ninja  # [win]
+    - export CMAKE_GENERATOR=Ninja  # [not win]
     - {{ PYTHON }} -m pip install . --no-deps --no-build-isolation -vv
   skip: True  # [py<38]
 
